@@ -1,4 +1,6 @@
 import playsound
+import os
 
 def boost():
-	playsound.playsound('audio.mp3',0)
+	audio_path = os.path.join(os.path.dirname(__file__), "audio.mp3")
+	playsound.playsound(audio_path,0)
