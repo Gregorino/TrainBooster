@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="TrainingBooster",
+    name="TrainBooster",
     version="1.0.0",
     author="Gregor Podrekar",
     author_email="gregapo@gmail.com",
