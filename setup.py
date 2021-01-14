@@ -12,10 +12,11 @@ setuptools.setup(
     long_description="",
     long_description_content_type="",
     url="https://github.com/Gregorino/TrainBooster/",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages('.'),
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    include_package_data=True
 )
