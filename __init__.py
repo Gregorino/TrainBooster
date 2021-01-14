@@ -1,4 +1,5 @@
 import playsound
 
-def displayIntro():
-	playsound.playsound('sound.mp3',0)
+class TrainBooster:
+	def boost(self):
+		playsound.playsound('audio.mp3',0)
