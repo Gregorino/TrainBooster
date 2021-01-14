@@ -11,7 +11,7 @@ setuptools.setup(
     description="Something to boost your DL training:)",
     long_description="",
     long_description_content_type="",
-    url="",
+    url="https://github.com/Gregorino/TrainBooster/",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
