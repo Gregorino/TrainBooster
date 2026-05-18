@@ -1,15 +1,40 @@
 # TrainBooster
 
-Are you stucked at 0.96 accuracy and want to achieve 1.0?
+Are you stuck at 0.96 accuracy and want to achieve 1.0?
 
-Do:
+## Installation
+
 ```bash
 pip install git+https://github.com/Gregorino/TrainBooster.git
 ```
 
-and then:
-```
-from TrainBooster import boost
+Make sure you have `ffmpeg` installed:
+- **macOS:** `brew install ffmpeg`
+- **Ubuntu/Debian:** `apt-get install ffmpeg`
+- **Windows:** `choco install ffmpeg`
+
+## Usage
+
+### Quick boost (one-time)
+Play a motivational sound once without blocking your code:
+
+```python
+from trainbooster import boost
+
 boost()
+train_model()  # Your training continues while audio plays
 ```
-and 1.0 or above is guaranteed :)
+
+### Continuous boost (context manager)
+Play motivational audio continuously throughout your training:
+
+```python
+from trainbooster import booster
+
+with booster():
+    for epoch in range(100):
+        train()
+    # Audio stops automatically when training is done
+```
+
+**Result:** 1.0 accuracy or above is guaranteed! 🚀
