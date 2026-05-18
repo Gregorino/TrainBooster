@@ -3,7 +3,7 @@ requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "TrainBooster"
+name = "trainbooster"
 version = "1.0.0"
 description = "Something to boost your DL training:)"
 readme = "README.md"
