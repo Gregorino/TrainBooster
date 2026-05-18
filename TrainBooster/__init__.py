@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings('ignore', category=SyntaxWarning)
+
 from pydub import AudioSegment
 from pydub.playback import play
 import os
