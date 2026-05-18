@@ -19,5 +19,9 @@ dependencies = [
     "pydub"
 ]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["trainbooster*"]
+
 [project.urls]
 Homepage = "https://github.com/Gregorino/TrainBooster/"
