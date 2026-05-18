@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "TrainBooster"
+version = "1.0.0"
+description = "Something to boost your DL training:)"
+readme = "README.md"
+requires-python = ">=3.6"
+authors = [
+    {name = "Gregor Podrekar", email = "gregapo@gmail.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "playsound"
+]
+
+[project.urls]
+Homepage = "https://github.com/Gregorino/TrainBooster/"
