@@ -19,7 +19,7 @@ Make sure you have `ffmpeg` installed:
 Play a motivational sound once without blocking your code:
 
 ```python
-from TrainBooster import boost
+from trainbooster import boost
 
 boost()
 train_model()  # Your training continues while audio plays
@@ -29,7 +29,7 @@ train_model()  # Your training continues while audio plays
 Play motivational audio continuously throughout your training:
 
 ```python
-from TrainBooster import booster
+from trainbooster import booster
 
 with booster():
     for epoch in range(100):
