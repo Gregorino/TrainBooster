@@ -52,7 +52,7 @@ def booster():
 	ctx = BoosterContext()
 	ctx.start()
 	try:
-		yield
+		yield ctx
 	finally:
 		ctx.stop()
 
