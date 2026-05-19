@@ -3,60 +3,61 @@ warnings.filterwarnings('ignore', category=SyntaxWarning)
 
 import os
 import subprocess
-from threading import Thread, Event
+from contextlib import contextmanager
+from threading import Thread, Event, Lock
 from tempfile import NamedTemporaryFile
 from pydub import AudioSegment
+from pydub.playback import play  # kept for boost() / backward compat
+
+_stderr_lock = Lock()
 
 
-def _load_audio_silently(path):
-    """Load audio while suppressing ffmpeg stderr output."""
-    old_stderr = os.dup(2)
-    devnull = os.open(os.devnull, os.O_WRONLY)
-    os.dup2(devnull, 2)
-    try:
-        audio = AudioSegment.from_mp3(path)
-    finally:
-        os.dup2(old_stderr, 2)
-        os.close(old_stderr)
-        os.close(devnull)
-    return audio
+@contextmanager
+def _quiet_stderr():
+    with _stderr_lock:
+        old = os.dup(2)
+        null = os.open(os.devnull, os.O_WRONLY)
+        os.dup2(null, 2)
+        try:
+            yield
+        finally:
+            os.dup2(old, 2)
+            os.close(old)
+            os.close(null)
 
 
 class BoosterContext:
     def __init__(self):
+        self.playing = False
+        self.playback_thread = None
         self._stop_event = Event()
-        self._thread = None
 
     def start(self):
-        if self._thread is None or not self._thread.is_alive():
+        if not self.playing:
+            self.playing = True
             self._stop_event.clear()
-            self._thread = Thread(target=self._play_loop, daemon=True)
-            self._thread.start()
+            self.playback_thread = Thread(target=self._play_loop, daemon=True)
+            self.playback_thread.start()
 
     def stop(self):
+        self.playing = False
         self._stop_event.set()
-        if self._thread:
-            self._thread.join(timeout=3)
+        if self.playback_thread:
+            self.playback_thread.join(timeout=3)
 
     def _play_loop(self):
         audio_path = os.path.join(os.path.dirname(__file__), "audio.mp3")
-        audio = _load_audio_silently(audio_path)
+
+        with _quiet_stderr():
+            audio = AudioSegment.from_mp3(audio_path)
 
         with NamedTemporaryFile(suffix=".wav", delete=False) as f:
             tmp_path = f.name
-
-        old_stderr = os.dup(2)
-        devnull = os.open(os.devnull, os.O_WRONLY)
-        os.dup2(devnull, 2)
-        try:
+        with _quiet_stderr():
             audio.export(tmp_path, "wav")
-        finally:
-            os.dup2(old_stderr, 2)
-            os.close(old_stderr)
-            os.close(devnull)
 
         try:
-            while not self._stop_event.is_set():
+            while self.playing:
                 proc = subprocess.Popen(
                     ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", tmp_path],
                     stdout=subprocess.DEVNULL,
@@ -80,8 +81,14 @@ class BoosterContext:
 
 
 def boost():
-    """Play boost audio continuously; use as a context manager to stop on exit."""
+    """Play boost audio once in a non-blocking way."""
+    audio_path = os.path.join(os.path.dirname(__file__), "audio.mp3")
+    with _quiet_stderr():
+        audio = AudioSegment.from_mp3(audio_path)
+    thread = Thread(target=play, args=(audio,), daemon=True)
+    thread.start()
+
+
+def booster():
+    """Context manager for playing boost audio continuously."""
     return BoosterContext()
-
-
-booster = boost

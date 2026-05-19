@@ -19,9 +19,13 @@ def test_audio_file_bundled():
 
 @pytest.fixture
 def mocked_audio():
-    """Patch pydub so tests never touch real audio hardware."""
+    """Patch pydub and subprocess so tests never touch real audio hardware."""
+    mock_proc = MagicMock()
+    mock_proc.poll.return_value = None  # simulate process still running until stop()
+
     with patch("trainbooster.AudioSegment.from_mp3") as mock_load, \
-         patch("trainbooster.play") as mock_play:
+         patch("trainbooster.play") as mock_play, \
+         patch("trainbooster.subprocess.Popen", return_value=mock_proc):
         mock_load.return_value = MagicMock()
         yield mock_load, mock_play
 
